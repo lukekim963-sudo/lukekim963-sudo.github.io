@@ -425,48 +425,81 @@
       color: #0a0a0a;
     }
     .instruction { max-width: 290px; color: #6b6b6b; }
-    .node-wrap { width: clamp(84px, 8.6vw, 126px); }
+    .node-wrap {
+      width: clamp(84px, 8.6vw, 126px);
+      perspective: 760px;
+      transform-style: preserve-3d;
+    }
     .node-wrap:nth-child(2) { width: clamp(96px, 9.6vw, 140px); }
     .node-wrap:nth-child(3) { width: clamp(108px, 10.7vw, 154px); }
     .node-wrap:nth-child(4) { width: clamp(90px, 9vw, 132px); }
     .node {
-      border-color: #000000;
-      border-radius: 2px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.2) 0, rgba(255,255,255,.025) 24%, transparent 25%),
-        linear-gradient(315deg, #000000 0, #060606 31%, transparent 32%),
-        #101010;
-      color: #ffffff;
-      clip-path: polygon(7% 0, 93% 0, 100% 7%, 100% 93%, 93% 100%, 7% 100%, 0 93%, 0 7%);
-      transform: perspective(520px) rotateX(-7deg) rotateY(10deg) rotateZ(-2deg);
-      box-shadow:
-        inset -18px -20px 34px rgba(0,0,0,.88),
-        inset 13px 11px 22px rgba(255,255,255,.06),
-        0 18px 38px rgba(0,0,0,.2);
-    }
-    .node::before {
-      inset: 11%;
-      border: 1px solid rgba(255,255,255,.14);
+      --cube-depth: clamp(13px, 1.45vw, 22px);
+      overflow: visible;
+      border: 1px solid #000000;
       border-radius: 0;
       background:
-        linear-gradient(135deg, transparent 48.8%, rgba(255,255,255,.12) 49%, rgba(255,255,255,.12) 50%, transparent 50.2%);
+        linear-gradient(145deg, rgba(255,255,255,.16), transparent 31%),
+        linear-gradient(315deg, #030303, #111111 68%);
+      color: #ffffff;
+      transform-style: preserve-3d;
+      transform: rotateX(-10deg) rotateY(16deg) rotateZ(-2deg);
+      box-shadow:
+        inset -20px -22px 34px rgba(0,0,0,.72),
+        inset 12px 10px 20px rgba(255,255,255,.07),
+        12px 18px 30px rgba(0,0,0,.2);
+    }
+    .node::before,
+    .node::after,
+    .cube-depth {
+      content: "";
+      position: absolute;
+      display: block;
+      pointer-events: none;
+      border: 1px solid #000;
       mix-blend-mode: normal;
       animation: none;
     }
-    .node::after { display: none; }
-    .node-wrap:nth-child(2) .node { transform: perspective(520px) rotateX(-9deg) rotateY(-9deg) rotateZ(2deg); }
-    .node-wrap:nth-child(3) .node { transform: perspective(520px) rotateX(7deg) rotateY(11deg) rotateZ(1deg); }
-    .node-wrap:nth-child(4) .node { transform: perspective(520px) rotateX(8deg) rotateY(-10deg) rotateZ(-2deg); }
+    .node::before {
+      inset: auto 0 100% 0;
+      height: var(--cube-depth);
+      background: linear-gradient(180deg, #6a6a6a, #292929);
+      transform-origin: bottom;
+      transform: rotateX(90deg);
+    }
+    .node::after {
+      inset: 0 auto 0 100%;
+      width: var(--cube-depth);
+      background: linear-gradient(90deg, #1f1f1f, #050505);
+      opacity: 1;
+      transform-origin: left;
+      transform: rotateY(90deg);
+      transition: none;
+    }
+    .node:hover::after,
+    .node:focus-visible::after { opacity: 1; transform: rotateY(90deg); }
+    .cube-depth {
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: var(--cube-depth);
+      background: #050505;
+      transform-origin: top;
+      transform: rotateX(-90deg);
+    }
+    .node-wrap:nth-child(2) .node { transform: rotateX(-12deg) rotateY(-14deg) rotateZ(2deg); }
+    .node-wrap:nth-child(3) .node { transform: rotateX(9deg) rotateY(17deg) rotateZ(1deg); }
+    .node-wrap:nth-child(4) .node { transform: rotateX(11deg) rotateY(-15deg) rotateZ(-2deg); }
     .node:hover, .node:focus-visible {
       border-color: #000000;
       box-shadow:
-        inset -18px -20px 34px rgba(0,0,0,.88),
-        inset 13px 11px 22px rgba(255,255,255,.08),
+        inset -20px -22px 34px rgba(0,0,0,.7),
+        inset 12px 10px 20px rgba(255,255,255,.1),
         0 0 0 3px #ffffff,
         0 0 0 5px #000000,
-        0 20px 44px rgba(0,0,0,.25);
+        14px 22px 36px rgba(0,0,0,.27);
     }
-    .node-copy { left: 17%; right: 10%; bottom: 16%; }
+    .node-copy { left: 17%; right: 10%; bottom: 16%; transform: translateZ(2px); }
     .node-index { color: rgba(255,255,255,.56); font-size: 8px; }
     .node-title { font-size: clamp(16px, 1.55vw, 23px); }
     .reset-camera {
@@ -528,10 +561,10 @@
     <div class="brand-mark" aria-label="Blue Wave Studio">bluewavestudio</div>
 
     <ul class="nodes" id="identity-nodes" aria-label="Explore Brandon's identity">
-      <li class="node-wrap" data-orbit="0"><button class="node" type="button" data-panel="service" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">01 / 04</span><span class="node-title">Service</span></span></button></li>
-      <li class="node-wrap" data-orbit="1"><button class="node" type="button" data-panel="strategy" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">02 / 04</span><span class="node-title">Strategy</span></span></button></li>
-      <li class="node-wrap" data-orbit="2"><button class="node" type="button" data-panel="medtech" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">03 / 04</span><span class="node-title">Next<br />mission</span></span></button></li>
-      <li class="node-wrap" data-orbit="3"><button class="node" type="button" data-panel="frame" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">04 / 04</span><span class="node-title">Behind<br />the lens</span></span></button></li>
+      <li class="node-wrap" data-orbit="0"><button class="node" type="button" data-panel="service" aria-haspopup="dialog"><span class="cube-depth" aria-hidden="true"></span><span class="node-copy"><span class="node-index">01 / 04</span><span class="node-title">Service</span></span></button></li>
+      <li class="node-wrap" data-orbit="1"><button class="node" type="button" data-panel="strategy" aria-haspopup="dialog"><span class="cube-depth" aria-hidden="true"></span><span class="node-copy"><span class="node-index">02 / 04</span><span class="node-title">Strategy</span></span></button></li>
+      <li class="node-wrap" data-orbit="2"><button class="node" type="button" data-panel="medtech" aria-haspopup="dialog"><span class="cube-depth" aria-hidden="true"></span><span class="node-copy"><span class="node-index">03 / 04</span><span class="node-title">Next<br />mission</span></span></button></li>
+      <li class="node-wrap" data-orbit="3"><button class="node" type="button" data-panel="frame" aria-haspopup="dialog"><span class="cube-depth" aria-hidden="true"></span><span class="node-copy"><span class="node-index">04 / 04</span><span class="node-title">Behind<br />the lens</span></span></button></li>
     </ul>
 
     <a class="contact-link" href="mailto:brandon@bluewave9thst.com">brandon@bluewave9thst.com ↗</a>
@@ -604,20 +637,30 @@
     }
     const random = seeded(48921);
     const orbitSpecs = [
-      { radius: 300, phase: 0, speed: .000072 },
-      { radius: 300, phase: Math.PI * .5, speed: .000072 },
-      { radius: 300, phase: Math.PI, speed: .000072 },
-      { radius: 300, phase: Math.PI * 1.5, speed: .000072 }
+      { radius: 118, phase: .18, speed: .00006 },
+      { radius: 178, phase: Math.PI * .72, speed: -.000048 },
+      { radius: 238, phase: Math.PI * 1.18, speed: .000038 },
+      { radius: 300, phase: Math.PI * 1.72, speed: -.00003 }
     ];
-    const orbitRadii = [118, 178, 238, 300];
-    const clusterNodes = Array.from({ length: 50 }, (_, index) => ({
-      angle: index / 50 * Math.PI * 2 + (random() - .5) * .16,
-      radius: 390 + random() * 155,
-      lift: (random() - .5) * 170,
-      phase: random() * Math.PI * 2,
-      speed: .00028 + random() * .00018,
-      size: 1.8 + random() * 2.6
-    }));
+    const orbitRadii = orbitSpecs.map((spec) => spec.radius);
+    const clusterNodes = Array.from({ length: 50 }, () => {
+      const longitude = random() * Math.PI * 2;
+      const latitude = Math.asin(random() * 2 - 1);
+      const radius = 390 + random() * 190;
+      return {
+        x: Math.cos(latitude) * Math.cos(longitude) * radius,
+        y: Math.sin(latitude) * radius * .68,
+        z: Math.cos(latitude) * Math.sin(longitude) * radius,
+        driftX: 10 + random() * 24,
+        driftY: 8 + random() * 22,
+        driftZ: 8 + random() * 20,
+        phaseX: random() * Math.PI * 2,
+        phaseY: random() * Math.PI * 2,
+        phaseZ: random() * Math.PI * 2,
+        speed: .00007 + random() * .00009,
+        size: 1.4 + random() * 2.8
+      };
+    });
 
     function resize() {
       const rect = world.getBoundingClientRect();
@@ -674,10 +717,49 @@
         if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
-      ctx.strokeStyle = 'rgba(0,0,0,.28)';
+      ctx.strokeStyle = 'rgba(0,0,0,.24)';
       ctx.lineWidth = 1;
       ctx.setLineDash([]);
       ctx.stroke();
+    }
+
+    function drawWireGlobe(center, radius, now, scenePaused) {
+      const spin = scenePaused ? .32 : now * .000025;
+      ctx.save();
+      ctx.translate(center.x, center.y);
+      ctx.strokeStyle = 'rgba(0,0,0,.7)';
+      ctx.lineWidth = 1;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      [-.68, -.36, .36, .68].forEach((latitude) => {
+        const y = Math.sin(latitude) * radius;
+        const horizontalRadius = Math.cos(latitude) * radius;
+        ctx.beginPath();
+        ctx.ellipse(0, y, horizontalRadius, horizontalRadius * .18, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0,0,0,.34)';
+        ctx.stroke();
+      });
+
+      [-1.05, -.52, 0, .52, 1.05].forEach((longitude) => {
+        const turn = longitude + spin;
+        const x = Math.sin(turn) * radius * .16;
+        const width = Math.max(3, Math.abs(Math.cos(turn)) * radius);
+        ctx.beginPath();
+        ctx.ellipse(x, 0, width, radius, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0,0,0,.34)';
+        ctx.stroke();
+      });
+
+      ctx.strokeStyle = '#050505';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-radius * 1.42, 0);
+      ctx.lineTo(radius * 1.42, 0);
+      ctx.stroke();
+      ctx.restore();
     }
 
     function drawScene(now) {
@@ -692,58 +774,47 @@
       /* Clear orbital architecture: four concentric paths, one shared movement. */
       orbitRadii.forEach((radius) => drawOrbitPath({ radius }, orbitScale));
 
-      /* Fifty linked circles form a gently hovering constellation outside the orbital system. */
+      /* An undirected constellation: every star drifts on its own three-dimensional path. */
       const constellation = clusterNodes.map((node) => {
-        const drift = scenePaused ? node.phase : node.phase + now * node.speed;
-        const radius = (node.radius + Math.sin(drift) * 10) * orbitScale;
-        const angle = node.angle + Math.sin(drift * .73) * .026;
+        const time = scenePaused ? 0 : now * node.speed;
         return {
           ...project({
-            x: Math.cos(angle) * radius,
-            y: (node.lift + Math.sin(drift * 1.31) * 10) * orbitScale,
-            z: Math.sin(angle) * radius
+            x: (node.x + Math.sin(node.phaseX + time) * node.driftX) * orbitScale,
+            y: (node.y + Math.sin(node.phaseY + time * .83) * node.driftY) * orbitScale,
+            z: (node.z + Math.sin(node.phaseZ + time * .67) * node.driftZ) * orbitScale
           }),
           size: node.size
         };
       });
 
-      ctx.lineWidth = .72;
-      ctx.strokeStyle = 'rgba(0,0,0,.18)';
+      ctx.lineWidth = .65;
       constellation.forEach((point, index) => {
-        const next = constellation[(index + 1) % constellation.length];
-        ctx.beginPath();
-        ctx.moveTo(point.x, point.y);
-        ctx.lineTo(next.x, next.y);
-        ctx.stroke();
-        if (index % 5 === 0) {
-          const crossLink = constellation[(index + 6) % constellation.length];
+        const neighbors = constellation
+          .map((other, otherIndex) => ({
+            other,
+            otherIndex,
+            distance: Math.hypot(point.x - other.x, point.y - other.y)
+          }))
+          .filter((entry) => entry.otherIndex > index && entry.distance < (width < 760 ? 92 : 132))
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 2);
+        neighbors.forEach(({ other, distance }) => {
           ctx.beginPath();
           ctx.moveTo(point.x, point.y);
-          ctx.lineTo(crossLink.x, crossLink.y);
+          ctx.lineTo(other.x, other.y);
+          ctx.strokeStyle = `rgba(0,0,0,${Math.max(.05, .2 - distance / 900)})`;
           ctx.stroke();
-        }
+        });
       });
       constellation.forEach((point) => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0,0,0,.74)';
+        ctx.fillStyle = 'rgba(0,0,0,.72)';
         ctx.fill();
       });
 
-      /* A restrained black center replaces the former star cluster. */
-      ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,.22)';
-      ctx.shadowBlur = 22;
-      ctx.fillStyle = '#030303';
-      ctx.beginPath();
-      ctx.arc(center.x, center.y, Math.max(25, 38 * center.scale), 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-      ctx.strokeStyle = 'rgba(0,0,0,.22)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(center.x, center.y, Math.max(38, 57 * center.scale), 0, Math.PI * 2);
-      ctx.stroke();
+      /* A clean wireframe globe replaces the old solid center. */
+      drawWireGlobe(center, width < 760 ? 54 : Math.min(78, width * .055), now, scenePaused);
 
       nodeWraps.forEach((wrap, index) => {
         const spec = orbitSpecs[index];
