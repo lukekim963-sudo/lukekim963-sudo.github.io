@@ -546,6 +546,185 @@
       .node-title { font-size: clamp(14px, 4.5vw, 19px); }
     }
 
+    /* Milky Way redesign: a dark, luminous field with star-shaped chapter portals. */
+    :root {
+      color-scheme: dark;
+      --space: #010103;
+      --ink: #f8f8f6;
+      --muted: #9b9ba3;
+      --line: rgba(255,255,255,.2);
+      --node-ink: #ffffff;
+      --focus: #ffffff;
+      --panel: #050507;
+      --panel-ink: #ffffff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: dark;
+        --space: #010103;
+        --ink: #f8f8f6;
+        --muted: #9b9ba3;
+        --line: rgba(255,255,255,.2);
+        --node-ink: #ffffff;
+        --focus: #ffffff;
+        --panel: #050507;
+        --panel-ink: #ffffff;
+      }
+    }
+    body { background: #010103; color: var(--ink); }
+    ::selection { background: #ffffff; color: #050507; }
+    .world {
+      background:
+        radial-gradient(circle at 50% 52%, rgba(255,255,255,.055), transparent 14%),
+        radial-gradient(ellipse at 54% 54%, #090a11 0, #030307 45%, #010103 78%);
+      color: #ffffff;
+    }
+    .vignette {
+      display: block;
+      background:
+        linear-gradient(90deg, rgba(1,1,3,.62) 0, rgba(1,1,3,.08) 24%, transparent 52%),
+        radial-gradient(circle at 50% 52%, transparent 22%, rgba(1,1,3,.12) 63%, rgba(1,1,3,.72) 118%);
+    }
+    .brand-mark {
+      border-color: rgba(255,255,255,.16);
+      background: rgba(3,3,6,.62);
+      color: rgba(255,255,255,.64);
+      box-shadow: none;
+      backdrop-filter: blur(8px);
+    }
+    .intro { color: #ffffff; }
+    .role, .instruction { color: var(--muted); }
+    .role::before { background: #ffffff; }
+    h1 { color: #ffffff; }
+    .node-wrap,
+    .node-wrap:nth-child(2),
+    .node-wrap:nth-child(3),
+    .node-wrap:nth-child(4) {
+      width: clamp(82px, 8.2vw, 118px);
+      aspect-ratio: 1;
+      perspective: none;
+      transform-style: flat;
+    }
+    .node-wrap:nth-child(2) { width: clamp(90px, 9vw, 130px); }
+    .node-wrap:nth-child(3) { width: clamp(98px, 9.8vw, 142px); }
+    .node-wrap:nth-child(4) { width: clamp(86px, 8.6vw, 124px); }
+    .node {
+      --star-size: 58%;
+      overflow: visible;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #ffffff;
+      transform: none;
+      box-shadow: none;
+      filter: drop-shadow(0 0 7px rgba(255,255,255,.55));
+      transition: filter .24s ease;
+    }
+    .node::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--star-size);
+      aspect-ratio: 1;
+      border: 0;
+      background: #ffffff;
+      clip-path: polygon(50% 0, 57% 39%, 100% 50%, 57% 61%, 50% 100%, 43% 61%, 0 50%, 43% 39%);
+      transform: translate(-50%, -50%);
+      animation: starBreathe 4.8s ease-in-out infinite;
+      mix-blend-mode: normal;
+    }
+    .node::after {
+      content: "";
+      position: absolute;
+      inset: 3%;
+      border: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.26) 0, rgba(255,255,255,.11) 26%, transparent 68%);
+      opacity: .92;
+      transform: none;
+      animation: haloBreathe 4.8s ease-in-out infinite;
+    }
+    .node-wrap:nth-child(2) .node::before,
+    .node-wrap:nth-child(2) .node::after { animation-delay: -1.1s; }
+    .node-wrap:nth-child(3) .node::before,
+    .node-wrap:nth-child(3) .node::after { animation-delay: -2.4s; }
+    .node-wrap:nth-child(4) .node::before,
+    .node-wrap:nth-child(4) .node::after { animation-delay: -3.3s; }
+    .cube-depth { display: none; }
+    .node:hover,
+    .node:focus-visible {
+      outline: none;
+      border: 0;
+      box-shadow: none;
+      filter: drop-shadow(0 0 11px rgba(255,255,255,.95));
+    }
+    .node:hover::before,
+    .node:focus-visible::before { transform: translate(-50%, -50%) scale(1.08); }
+    .node:hover::after,
+    .node:focus-visible::after { opacity: 1; transform: none; }
+    .node-copy {
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      top: calc(100% + 4px);
+      width: 150px;
+      transform: translateX(-50%);
+      text-align: center;
+      text-shadow: 0 1px 8px #000, 0 0 18px #000;
+    }
+    .node-index {
+      margin-bottom: 5px;
+      color: rgba(255,255,255,.47);
+      font-size: 8px;
+      letter-spacing: .14em;
+    }
+    .node-title {
+      font-family: "Archivo", sans-serif;
+      font-size: clamp(12px, 1.1vw, 15px);
+      font-weight: 500;
+      line-height: 1.08;
+      letter-spacing: .01em;
+    }
+    .reset-camera {
+      border-color: rgba(255,255,255,.24);
+      background: rgba(2,2,4,.72);
+      color: #ffffff;
+    }
+    .reset-camera:hover, .reset-camera:focus-visible { border-color: #ffffff; }
+    .camera-hint { color: rgba(255,255,255,.55); }
+    .contact-link { color: rgba(255,255,255,.86); }
+    .contact-link:hover, .contact-link:focus-visible { color: #ffffff; }
+    .veil { background: rgba(0,0,0,.76); }
+    .drawer,
+    .tone-service,
+    .tone-strategy,
+    .tone-medtech,
+    .tone-frame { background: #070709; color: #ffffff; }
+    .close { border-color: rgba(255,255,255,.45); background: #070709; color: #ffffff; }
+    .close:hover, .close:focus-visible { background: #ffffff; color: #050505; }
+    .panel-body, .panel-stat { border-top-color: rgba(255,255,255,.28); }
+    @keyframes starBreathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(.94) rotate(0deg); }
+      50% { transform: translate(-50%, -50%) scale(1.04) rotate(3deg); }
+    }
+    @keyframes haloBreathe { 0%, 100% { opacity: .52; } 50% { opacity: .92; } }
+
+    @media (max-width: 760px) {
+      .vignette {
+        background:
+          linear-gradient(180deg, rgba(1,1,3,.62) 0, transparent 28%),
+          radial-gradient(circle at 50% 57%, transparent 28%, rgba(1,1,3,.5) 118%);
+      }
+      .node-wrap,
+      .node-wrap:nth-child(2),
+      .node-wrap:nth-child(3),
+      .node-wrap:nth-child(4) { width: clamp(70px, 21vw, 92px); }
+      .node-copy { top: calc(100% + 2px); width: 112px; }
+      .node-title { font-size: clamp(11px, 3.4vw, 14px); }
+      .node-index { font-size: 7px; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
     }
@@ -658,7 +837,24 @@
         phaseY: random() * Math.PI * 2,
         phaseZ: random() * Math.PI * 2,
         speed: .00007 + random() * .00009,
-        size: 1.4 + random() * 2.8
+        size: 1.1 + random() * 2.2
+      };
+    });
+    const fieldStars = Array.from({ length: 220 }, () => ({
+      x: random(),
+      y: random(),
+      size: .35 + random() * 1.35,
+      alpha: .16 + random() * .62,
+      phase: random() * Math.PI * 2,
+      speed: .00025 + random() * .0004
+    }));
+    const milkyDust = Array.from({ length: 150 }, () => {
+      const x = random();
+      return {
+        x,
+        y: .53 - (x - .5) * .28 + (random() - .5) * .2,
+        size: .25 + random() * .85,
+        alpha: .08 + random() * .28
       };
     });
 
@@ -717,61 +913,78 @@
         if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
-      ctx.strokeStyle = 'rgba(0,0,0,.24)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,.08)';
+      ctx.lineWidth = .8;
       ctx.setLineDash([]);
       ctx.stroke();
     }
 
-    function drawWireGlobe(center, radius, now, scenePaused) {
-      const spin = scenePaused ? .32 : now * .000025;
+    function drawCoreLight(center, now, scenePaused) {
+      const pulse = scenePaused ? 1 : .92 + Math.sin(now * .0014) * .08;
+      const reach = Math.min(width, height) * .38;
+      drawGlow(center.x, center.y, reach, 'rgba(255,255,255,ALPHA)', .11 * pulse);
+      drawGlow(center.x, center.y, 74 * pulse, 'rgba(255,255,255,ALPHA)', .46);
+      drawGlow(center.x, center.y, 20 * pulse, 'rgba(255,255,255,ALPHA)', .95);
+
       ctx.save();
       ctx.translate(center.x, center.y);
-      ctx.strokeStyle = 'rgba(0,0,0,.7)';
-      ctx.lineWidth = 1;
-
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
-      ctx.stroke();
-
-      [-.68, -.36, .36, .68].forEach((latitude) => {
-        const y = Math.sin(latitude) * radius;
-        const horizontalRadius = Math.cos(latitude) * radius;
-        ctx.beginPath();
-        ctx.ellipse(0, y, horizontalRadius, horizontalRadius * .18, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(0,0,0,.34)';
-        ctx.stroke();
-      });
-
-      [-1.05, -.52, 0, .52, 1.05].forEach((longitude) => {
-        const turn = longitude + spin;
-        const x = Math.sin(turn) * radius * .16;
-        const width = Math.max(3, Math.abs(Math.cos(turn)) * radius);
-        ctx.beginPath();
-        ctx.ellipse(x, 0, width, radius, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(0,0,0,.34)';
-        ctx.stroke();
-      });
-
-      ctx.strokeStyle = '#050505';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(-radius * 1.42, 0);
-      ctx.lineTo(radius * 1.42, 0);
-      ctx.stroke();
+      const ray = ctx.createLinearGradient(-125, 0, 125, 0);
+      ray.addColorStop(0, 'rgba(255,255,255,0)');
+      ray.addColorStop(.46, 'rgba(255,255,255,.08)');
+      ray.addColorStop(.5, 'rgba(255,255,255,.78)');
+      ray.addColorStop(.54, 'rgba(255,255,255,.08)');
+      ray.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = ray;
+      ctx.fillRect(-125, -.45, 250, .9);
+      ctx.rotate(Math.PI / 2);
+      ctx.fillStyle = ray;
+      ctx.fillRect(-75, -.35, 150, .7);
       ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(center.x, center.y, 3.2 * pulse, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
     }
 
     function drawScene(now) {
       const scenePaused = reduceMotion || document.body.classList.contains('drawer-open');
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#010103';
       ctx.fillRect(0, 0, width, height);
 
       const center = project({ x: 0, y: 0, z: 0 });
       const orbitScale = width < 760 ? .9 : Math.min(1, width / 1180);
 
-      /* Clear orbital architecture: four concentric paths, one shared movement. */
+      /* A quiet diagonal Milky Way: dust, depth, and a little shimmer. */
+      ctx.save();
+      ctx.translate(width * .5, height * .5);
+      ctx.rotate(-.27);
+      const band = ctx.createLinearGradient(0, -height * .3, 0, height * .3);
+      band.addColorStop(0, 'rgba(255,255,255,0)');
+      band.addColorStop(.48, 'rgba(255,255,255,.017)');
+      band.addColorStop(.5, 'rgba(255,255,255,.035)');
+      band.addColorStop(.52, 'rgba(255,255,255,.017)');
+      band.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = band;
+      ctx.fillRect(-width, -height * .38, width * 2, height * .76);
+      ctx.restore();
+
+      fieldStars.forEach((star) => {
+        const shimmer = scenePaused ? 1 : .74 + Math.sin(now * star.speed + star.phase) * .26;
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${star.alpha * shimmer})`;
+        ctx.fill();
+      });
+      milkyDust.forEach((star) => {
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+        ctx.fill();
+      });
+
+      /* Four barely-there orbital paths organize the chapter stars. */
       orbitRadii.forEach((radius) => drawOrbitPath({ radius }, orbitScale));
 
       /* An undirected constellation: every star drifts on its own three-dimensional path. */
@@ -802,19 +1015,19 @@
           ctx.beginPath();
           ctx.moveTo(point.x, point.y);
           ctx.lineTo(other.x, other.y);
-          ctx.strokeStyle = `rgba(0,0,0,${Math.max(.05, .2 - distance / 900)})`;
+          ctx.strokeStyle = `rgba(255,255,255,${Math.max(.045, .18 - distance / 980)})`;
           ctx.stroke();
         });
       });
       constellation.forEach((point) => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0,0,0,.72)';
+        ctx.fillStyle = 'rgba(255,255,255,.78)';
         ctx.fill();
       });
 
-      /* A clean wireframe globe replaces the old solid center. */
-      drawWireGlobe(center, width < 760 ? 54 : Math.min(78, width * .055), now, scenePaused);
+      /* A tiny white source illuminates the system without becoming a planet. */
+      drawCoreLight(center, now, scenePaused);
 
       nodeWraps.forEach((wrap, index) => {
         const spec = orbitSpecs[index];
