@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="light dark" />
   <meta name="description" content="Brandon Kim — military medicine leader, emerging technologist, and visual storyteller in the San Francisco Bay Area." />
   <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -354,6 +354,154 @@
       .camera-ui, .contact-link { bottom: 20px; }
     }
 
+    /* Monochrome orbital system */
+    :root {
+      color-scheme: light dark;
+      --space: #ffffff;
+      --ink: #0a0a0a;
+      --muted: #6c6c6c;
+      --line: rgba(0,0,0,.28);
+      --node: #050505;
+      --node-ink: #ffffff;
+      --focus: #000000;
+      --panel: #050505;
+      --panel-ink: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --space: #ffffff;
+        --ink: #0a0a0a;
+        --muted: #6c6c6c;
+        --line: rgba(0,0,0,.28);
+        --node: #050505;
+        --node-ink: #ffffff;
+        --focus: #000000;
+        --panel: #050505;
+        --panel-ink: #ffffff;
+      }
+    }
+    body { background: #ffffff; color: var(--ink); }
+    ::selection { background: #111111; color: #ffffff; }
+    .world {
+      background: #ffffff;
+      color: #0a0a0a;
+    }
+    .vignette {
+      display: block;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.92) 0, rgba(255,255,255,.15) 28%, transparent 44%),
+        radial-gradient(circle at 56% 55%, transparent 40%, rgba(255,255,255,.08) 72%, rgba(255,255,255,.7) 125%);
+    }
+    .brand-mark {
+      position: absolute;
+      z-index: 8;
+      top: max(18px, env(safe-area-inset-top));
+      left: clamp(18px, 3vw, 42px);
+      padding: 8px 13px 8px 15px;
+      border: 1px solid #dedede;
+      border-radius: 7px;
+      background: #eeeeee;
+      color: #555555;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: .19em;
+      text-transform: lowercase;
+      pointer-events: none;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .intro {
+      top: clamp(78px, 10vh, 118px);
+      left: clamp(24px, 4.5vw, 74px);
+      width: min(330px, calc(100% - 48px));
+      color: #0a0a0a;
+    }
+    .role { color: #777777; }
+    .role::before { width: 18px; height: 1px; background: #111111; }
+    h1 {
+      margin-top: 15px;
+      max-width: 330px;
+      font-size: clamp(38px, 4vw, 60px);
+      color: #0a0a0a;
+    }
+    .instruction { max-width: 290px; color: #6b6b6b; }
+    .node-wrap { width: clamp(84px, 8.6vw, 126px); }
+    .node-wrap:nth-child(2) { width: clamp(96px, 9.6vw, 140px); }
+    .node-wrap:nth-child(3) { width: clamp(108px, 10.7vw, 154px); }
+    .node-wrap:nth-child(4) { width: clamp(90px, 9vw, 132px); }
+    .node {
+      border-color: #000000;
+      background:
+        radial-gradient(circle at 30% 24%, #3a3a3a 0, #151515 14%, #070707 48%, #000000 74%);
+      color: #ffffff;
+      box-shadow:
+        inset -24px -28px 44px rgba(0,0,0,.92),
+        inset 11px 9px 25px rgba(255,255,255,.07),
+        0 18px 38px rgba(0,0,0,.2);
+    }
+    .node::before {
+      background:
+        repeating-radial-gradient(ellipse at 72% 46%, transparent 0 11%, rgba(255,255,255,.035) 12%, transparent 14%),
+        conic-gradient(from 20deg, transparent, rgba(255,255,255,.09), transparent 26%, rgba(255,255,255,.03), transparent 58%);
+      mix-blend-mode: screen;
+    }
+    .node::after { color: #ffffff; }
+    .node:hover, .node:focus-visible {
+      border-color: #000000;
+      box-shadow:
+        inset -24px -28px 44px rgba(0,0,0,.92),
+        inset 11px 9px 25px rgba(255,255,255,.08),
+        0 0 0 3px #ffffff,
+        0 0 0 5px #000000,
+        0 20px 44px rgba(0,0,0,.25);
+    }
+    .node-copy { left: 17%; right: 10%; bottom: 16%; }
+    .node-index { color: rgba(255,255,255,.56); font-size: 8px; }
+    .node-title { font-size: clamp(16px, 1.55vw, 23px); }
+    .reset-camera {
+      border-color: rgba(0,0,0,.28);
+      background: rgba(255,255,255,.88);
+      color: #111111;
+    }
+    .reset-camera:hover, .reset-camera:focus-visible { border-color: #000000; }
+    .camera-hint { color: #666666; }
+    .contact-link { color: #111111; }
+    .contact-link:hover, .contact-link:focus-visible { color: #666666; }
+    .veil { background: rgba(255,255,255,.72); }
+    .drawer,
+    .tone-service,
+    .tone-strategy,
+    .tone-medtech,
+    .tone-frame {
+      background: #050505;
+      color: #ffffff;
+    }
+    .close {
+      border-color: rgba(255,255,255,.45);
+      background: #050505;
+      color: #ffffff;
+    }
+    .close:hover, .close:focus-visible { background: #ffffff; color: #050505; }
+    .panel-body,
+    .panel-stat { border-top-color: rgba(255,255,255,.35); }
+
+    @media (max-width: 760px) {
+      .vignette {
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.9) 0, rgba(255,255,255,.1) 26%, transparent 42%),
+          radial-gradient(circle at 50% 62%, transparent 42%, rgba(255,255,255,.65) 122%);
+      }
+      .brand-mark { top: max(14px, env(safe-area-inset-top)); left: 14px; }
+      .intro { top: 68px; left: 18px; width: calc(100% - 36px); }
+      .intro h1 { width: 265px; font-size: clamp(34px, 10.5vw, 48px); }
+      .instruction { max-width: 245px; }
+      .node-wrap,
+      .node-wrap:nth-child(2),
+      .node-wrap:nth-child(3),
+      .node-wrap:nth-child(4) { width: clamp(76px, 23vw, 104px); }
+      .node-title { font-size: clamp(14px, 4.5vw, 19px); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
     }
@@ -365,6 +513,8 @@
   <main class="world" id="world" aria-label="Interactive orbit of Brandon Kim's identity">
     <canvas class="space-canvas" id="space" aria-hidden="true"></canvas>
     <div class="vignette" aria-hidden="true"></div>
+
+    <div class="brand-mark" aria-label="Blue Wave Studio">bluewavestudio</div>
 
     <header class="intro">
       <p class="role">San Francisco Bay Area</p>
@@ -433,7 +583,7 @@
     const nodeWraps = [...document.querySelectorAll('.node-wrap')];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const camera = { yaw: -0.18, pitch: -0.12, distance: 820 };
+    const camera = { yaw: -0.08, pitch: -0.5, distance: 820 };
     const homeCamera = { ...camera };
     let width = 0, height = 0, dpr = 1;
     let lastFrame = performance.now();
@@ -452,34 +602,20 @@
       };
     }
     const random = seeded(48921);
-    const stars = Array.from({ length: 520 }, () => ({
-      x: (random() - .5) * 2100,
-      y: (random() - .5) * 1300,
-      z: (random() - .5) * 1500,
-      a: .18 + random() * .6,
-      s: .35 + random() * 1.25
-    }));
-    const galaxy = Array.from({ length: 1900 }, (_, i) => {
-      const arm = i % 3;
-      const t = Math.pow(random(), .7) * Math.PI * 5.7;
-      const radius = 13 + t * 17.2 + (random() - .5) * (25 + t * .9);
-      const angle = t + arm * Math.PI * 2 / 3 + (random() - .5) * (.16 + t * .006);
-      const flatten = 1 - Math.min(radius / 330, .9);
-      return {
-        x: Math.cos(angle) * radius,
-        y: (random() - .5) * (12 + 54 * flatten),
-        z: Math.sin(angle) * radius,
-        s: .45 + random() * 1.8,
-        heat: Math.max(0, 1 - radius / 330),
-        a: .18 + random() * .72
-      };
-    });
     const orbitSpecs = [
-      { radius: 315, phase: .2, speed: .000088, y: -100, tilt: .24 },
-      { radius: 265, phase: 1.75, speed: -.000105, y: 84, tilt: -.3 },
-      { radius: 365, phase: 3.0, speed: .000074, y: 40, tilt: .16 },
-      { radius: 295, phase: 4.55, speed: -.000086, y: -22, tilt: -.22 }
+      { radius: 300, phase: 0, speed: .000072 },
+      { radius: 300, phase: Math.PI * .5, speed: .000072 },
+      { radius: 300, phase: Math.PI, speed: .000072 },
+      { radius: 300, phase: Math.PI * 1.5, speed: .000072 }
     ];
+    const orbitRadii = [118, 178, 238, 300];
+    const pullStrings = Array.from({ length: 24 }, (_, index) => ({
+      angle: index / 24 * Math.PI * 2 + (random() - .5) * .12,
+      radius: 92 + random() * 300,
+      phase: random(),
+      speed: .000035 + random() * .00002,
+      length: 18 + random() * 38
+    }));
 
     function resize() {
       const rect = world.getBoundingClientRect();
@@ -507,8 +643,8 @@
       const focal = Math.min(width, height) * 1.08;
       const depth = Math.max(180, camera.distance - p.z);
       const scale = focal / depth;
-      const centerX = width < 760 ? width * .5 : width * .59;
-      const centerY = width < 760 ? height * .62 : height * .53;
+      const centerX = width < 760 ? width * .5 : width * .62;
+      const centerY = width < 760 ? height * .68 : height * .56;
       return { x: centerX + p.x * scale, y: centerY + p.y * scale, scale, z: p.z };
     }
 
@@ -530,80 +666,107 @@
         const angle = i / segments * Math.PI * 2;
         const p = project({
           x: Math.cos(angle) * spec.radius * orbitScale,
-          y: spec.y * orbitScale + Math.sin(angle) * spec.radius * spec.tilt * orbitScale,
+          y: 0,
           z: Math.sin(angle) * spec.radius * orbitScale
         });
         if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
-      ctx.strokeStyle = 'rgba(138,150,255,.11)';
-      ctx.lineWidth = .75;
-      ctx.setLineDash([1.5, 7]);
-      ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,.28)';
+      ctx.lineWidth = 1;
       ctx.setLineDash([]);
+      ctx.stroke();
     }
 
     function drawScene(now) {
       const scenePaused = reduceMotion || document.body.classList.contains('drawer-open');
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = '#030405';
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, width, height);
 
-      for (const star of stars) {
-        const p = project(star);
-        if (p.x < -5 || p.x > width + 5 || p.y < -5 || p.y > height + 5) continue;
-        const twinkle = scenePaused ? 1 : .72 + Math.sin(now * .0012 + star.x) * .28;
-        ctx.fillStyle = `rgba(220,226,255,${star.a * twinkle})`;
-        ctx.fillRect(p.x, p.y, star.s, star.s);
-      }
-
       const center = project({ x: 0, y: 0, z: 0 });
-      const orbitScale = width < 760 ? .62 : 1;
-      orbitSpecs.forEach((spec) => drawOrbitPath(spec, orbitScale));
-      drawGlow(center.x, center.y, Math.min(width, height) * .34, 'rgba(58,65,220,ALPHA)', .2);
-      drawGlow(center.x, center.y, Math.min(width, height) * .17, 'rgba(212,142,255,ALPHA)', .32);
+      const orbitScale = width < 760 ? .9 : Math.min(1, width / 1180);
 
-      const galaxyTurn = scenePaused ? orbitClock * .000022 : now * .000022;
-      for (const point of galaxy) {
-        const p = project(point, galaxyTurn);
-        if (p.x < -8 || p.x > width + 8 || p.y < -8 || p.y > height + 8) continue;
-        const alpha = point.a * Math.min(1.25, p.scale * 1.2);
-        const r = point.s * Math.max(.65, p.scale);
-        ctx.fillStyle = point.heat > .62
-          ? `rgba(255,232,255,${alpha})`
-          : point.heat > .28
-            ? `rgba(176,138,255,${alpha})`
-            : `rgba(91,143,255,${alpha * .82})`;
+      /* Clear orbital architecture: four concentric paths, one shared movement. */
+      orbitRadii.forEach((radius) => drawOrbitPath({ radius }, orbitScale));
+
+      /* Subtle gravitational strings. Each bead moves inward along a straight spoke. */
+      for (const string of pullStrings) {
+        const outerRadius = string.radius * orbitScale;
+        const outer = project({
+          x: Math.cos(string.angle) * outerRadius,
+          y: 0,
+          z: Math.sin(string.angle) * outerRadius
+        });
+        const inner = project({
+          x: Math.cos(string.angle) * 44 * orbitScale,
+          y: 0,
+          z: Math.sin(string.angle) * 44 * orbitScale
+        });
         ctx.beginPath();
-        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      drawGlow(center.x, center.y, Math.max(42, 62 * center.scale), 'rgba(255,236,255,ALPHA)', .94);
-      drawGlow(center.x, center.y, Math.max(16, 24 * center.scale), 'rgba(255,255,255,ALPHA)', .92);
-      ctx.fillStyle = 'rgba(255,253,255,.98)';
-      ctx.beginPath();
-      ctx.arc(center.x, center.y, Math.max(2.4, 3.8 * center.scale), 0, Math.PI * 2);
-      ctx.fill();
+        ctx.moveTo(inner.x, inner.y);
+        ctx.lineTo(outer.x, outer.y);
+        ctx.strokeStyle = 'rgba(0,0,0,.09)';
+        ctx.lineWidth = .7;
+        ctx.stroke();
 
+        const progress = scenePaused ? string.phase : (string.phase + now * string.speed) % 1;
+        const eased = 1 - progress;
+        const beadRadius = 44 + (string.radius - 44) * eased;
+        const tailRadius = Math.min(string.radius, beadRadius + string.length);
+        const bead = project({
+          x: Math.cos(string.angle) * beadRadius * orbitScale,
+          y: 0,
+          z: Math.sin(string.angle) * beadRadius * orbitScale
+        });
+        const tail = project({
+          x: Math.cos(string.angle) * tailRadius * orbitScale,
+          y: 0,
+          z: Math.sin(string.angle) * tailRadius * orbitScale
+        });
+        ctx.beginPath();
+        ctx.moveTo(tail.x, tail.y);
+        ctx.lineTo(bead.x, bead.y);
+        ctx.strokeStyle = 'rgba(0,0,0,.48)';
+        ctx.lineWidth = .9;
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(0,0,0,.78)';
+        ctx.fillRect(bead.x - 1.25, bead.y - 1.25, 2.5, 2.5);
+      }
+
+      /* A restrained black center replaces the former star cluster. */
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,.22)';
+      ctx.shadowBlur = 22;
+      ctx.fillStyle = '#030303';
+      ctx.beginPath();
+      ctx.arc(center.x, center.y, Math.max(25, 38 * center.scale), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(0,0,0,.22)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(center.x, center.y, Math.max(38, 57 * center.scale), 0, Math.PI * 2);
+      ctx.stroke();
 
       nodeWraps.forEach((wrap, index) => {
         const spec = orbitSpecs[index];
         const angle = spec.phase + orbitClock * spec.speed;
         const point = {
           x: Math.cos(angle) * spec.radius * orbitScale,
-          y: spec.y * orbitScale + Math.sin(angle) * spec.radius * spec.tilt * orbitScale,
+          y: 0,
           z: Math.sin(angle) * spec.radius * orbitScale
         };
         const p = project(point);
-        const size = wrap.offsetWidth || 130;
-        const depthScale = Math.max(.72, Math.min(1.26, .72 + p.scale * .38));
-        const margin = size * .42;
+        const size = wrap.offsetWidth || 112;
+        const depthScale = Math.max(.76, Math.min(1.18, .78 + p.scale * .28));
+        const margin = size * .32;
         const x = Math.max(-margin, Math.min(width - size + margin, p.x - size / 2));
-        const y = Math.max(158, Math.min(height - size * .62, p.y - size / 2));
-        const bank = Math.sin(angle) * 2.2;
-        wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${depthScale}) rotate(${bank}deg)`;
-        wrap.style.zIndex = String(20 + Math.round((p.z + 400) / 20));
-        wrap.style.opacity = String(Math.max(.76, Math.min(1, .8 + p.scale * .16)));
+        const yMin = width < 760 ? 180 : 104;
+        const y = Math.max(yMin, Math.min(height - size * .66, p.y - size / 2));
+        wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${depthScale})`;
+        wrap.style.zIndex = String(20 + Math.round((p.z + 430) / 20));
+        wrap.style.opacity = String(Math.max(.82, Math.min(1, .86 + p.scale * .12)));
       });
     }
 
@@ -611,7 +774,7 @@
       const delta = Math.min(40, now - lastFrame);
       lastFrame = now;
       const drawerOpen = document.body.classList.contains('drawer-open');
-      const orbitRest = (now % 7000) > 4800;
+      const orbitRest = (now % 6000) > 3600;
       if (!reduceMotion && !drawerOpen && !dragging && now > interactionPauseUntil && !orbitRest) orbitClock += delta;
       if (!drawerOpen) drawScene(now);
       requestAnimationFrame(frame);
