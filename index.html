@@ -739,33 +739,60 @@
       .node-index { font-size: 7px; }
     }
 
-    /* Four unlabeled identity spheres: quiet, tactile, and held by the same gravity field. */
-    .node {
-      --sphere-size: clamp(17px, 1.7vw, 24px);
+    /* Four identical identity lights, matching the compact white source at the center. */
+    .node-wrap,
+    .node-wrap:nth-child(2),
+    .node-wrap:nth-child(3),
+    .node-wrap:nth-child(4) {
+      width: 112px;
     }
-    .node::before {
+    .node { --sphere-size: 6.4px; }
+    .node::before,
+    .node-wrap:nth-child(2) .node::before,
+    .node-wrap:nth-child(3) .node::before,
+    .node-wrap:nth-child(4) .node::before {
       width: var(--sphere-size);
-      background:
-        radial-gradient(circle at 36% 32%, #ffffff 0 18%, #f4f4f4 34%, #bcbec4 57%, #4e5159 74%, #0c0d11 100%);
+      height: var(--sphere-size);
+      aspect-ratio: auto;
+      background: #ffffff;
       box-shadow:
-        inset -3px -4px 7px rgba(0,0,0,.46),
-        0 0 4px 1px rgba(255,255,255,.95),
-        0 0 15px 5px rgba(255,255,255,.52),
-        0 0 42px 13px rgba(214,220,255,.16);
+        0 0 3px 1px rgba(255,255,255,1),
+        0 0 20px 8px rgba(255,255,255,.68),
+        0 0 74px 28px rgba(255,255,255,.18);
+      animation: coreBreathe 4.8s ease-in-out infinite;
+      animation-delay: 0s;
     }
-    .node::after {
-      width: calc(var(--sphere-size) * 3.25);
-      background: radial-gradient(circle, rgba(255,255,255,.18) 0, rgba(255,255,255,.07) 31%, transparent 70%);
+    .node::after,
+    .node-wrap:nth-child(2) .node::after,
+    .node-wrap:nth-child(3) .node::after,
+    .node-wrap:nth-child(4) .node::after {
+      width: 74px;
+      height: 74px;
+      aspect-ratio: auto;
+      background: radial-gradient(circle, rgba(255,255,255,.42) 0, rgba(255,255,255,.14) 18%, rgba(255,255,255,.045) 46%, transparent 72%);
       opacity: .72;
+      animation: coreHaloBreathe 4.8s ease-in-out infinite;
+      animation-delay: 0s;
     }
+    .node::before,
+    .node::after { display: none; }
     .node-copy { display: none; }
-    .node-wrap:nth-child(2) .node { --sphere-size: clamp(19px, 1.9vw, 27px); }
-    .node-wrap:nth-child(3) .node { --sphere-size: clamp(16px, 1.6vw, 23px); }
-    .node-wrap:nth-child(4) .node { --sphere-size: clamp(18px, 1.8vw, 25px); }
     .node:hover::before,
-    .node:focus-visible::before { transform: translate(-50%, -50%) scale(1.14); }
+    .node:focus-visible::before { transform: translate(-50%, -50%) scale(1.08); }
     .node:hover::after,
-    .node:focus-visible::after { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    .node:focus-visible::after { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+    @keyframes coreBreathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(.92); }
+      50% { transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes coreHaloBreathe { 0%, 100% { opacity: .58; } 50% { opacity: .82; } }
+
+    @media (max-width: 760px) {
+      .node-wrap,
+      .node-wrap:nth-child(2),
+      .node-wrap:nth-child(3),
+      .node-wrap:nth-child(4) { width: 92px; }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
@@ -995,12 +1022,12 @@
       ctx.restore();
     }
 
-    function drawCoreLight(center, now, scenePaused) {
+    function drawCoreLight(center, now, scenePaused, intensity = 1) {
       const pulse = scenePaused ? 1 : .92 + Math.sin(now * .0014) * .08;
       const reach = Math.min(width, height) * .38;
-      drawGlow(center.x, center.y, reach, 'rgba(255,255,255,ALPHA)', .11 * pulse);
-      drawGlow(center.x, center.y, 74 * pulse, 'rgba(255,255,255,ALPHA)', .46);
-      drawGlow(center.x, center.y, 20 * pulse, 'rgba(255,255,255,ALPHA)', .95);
+      drawGlow(center.x, center.y, reach, 'rgba(255,255,255,ALPHA)', .11 * pulse * intensity);
+      drawGlow(center.x, center.y, 74 * pulse, 'rgba(255,255,255,ALPHA)', .46 * intensity);
+      drawGlow(center.x, center.y, 20 * pulse, 'rgba(255,255,255,ALPHA)', Math.min(1, .95 * intensity));
 
       ctx.save();
       ctx.translate(center.x, center.y);
@@ -1109,7 +1136,7 @@
         };
         const projected = project(point);
         const size = wrap.offsetWidth || 112;
-        const depthScale = Math.max(.76, Math.min(1.18, .78 + projected.scale * .28));
+        const depthScale = 1;
         const margin = size * .32;
         const x = Math.max(-margin, Math.min(width - size + margin, projected.x - size / 2));
         const yMin = width < 760 ? 180 : 104;
@@ -1129,8 +1156,9 @@
         drawGravityPull(layout.star, center, now, index, scenePaused);
       });
 
-      /* A tiny white source illuminates the system without becoming a planet. */
+      /* Every identity sphere is rendered by the exact same light routine as the center. */
       drawCoreLight(center, now, scenePaused);
+      identityLayout.forEach(({ star }) => drawCoreLight(star, now, scenePaused, .9));
 
       identityLayout.forEach(({ wrap, projected, depthScale, x, y }) => {
         wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${depthScale})`;
