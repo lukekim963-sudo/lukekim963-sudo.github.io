@@ -431,26 +431,37 @@
     .node-wrap:nth-child(4) { width: clamp(90px, 9vw, 132px); }
     .node {
       border-color: #000000;
+      border-radius: 2px;
       background:
-        radial-gradient(circle at 30% 24%, #3a3a3a 0, #151515 14%, #070707 48%, #000000 74%);
+        linear-gradient(145deg, rgba(255,255,255,.2) 0, rgba(255,255,255,.025) 24%, transparent 25%),
+        linear-gradient(315deg, #000000 0, #060606 31%, transparent 32%),
+        #101010;
       color: #ffffff;
+      clip-path: polygon(7% 0, 93% 0, 100% 7%, 100% 93%, 93% 100%, 7% 100%, 0 93%, 0 7%);
+      transform: perspective(520px) rotateX(-7deg) rotateY(10deg) rotateZ(-2deg);
       box-shadow:
-        inset -24px -28px 44px rgba(0,0,0,.92),
-        inset 11px 9px 25px rgba(255,255,255,.07),
+        inset -18px -20px 34px rgba(0,0,0,.88),
+        inset 13px 11px 22px rgba(255,255,255,.06),
         0 18px 38px rgba(0,0,0,.2);
     }
     .node::before {
+      inset: 11%;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 0;
       background:
-        repeating-radial-gradient(ellipse at 72% 46%, transparent 0 11%, rgba(255,255,255,.035) 12%, transparent 14%),
-        conic-gradient(from 20deg, transparent, rgba(255,255,255,.09), transparent 26%, rgba(255,255,255,.03), transparent 58%);
-      mix-blend-mode: screen;
+        linear-gradient(135deg, transparent 48.8%, rgba(255,255,255,.12) 49%, rgba(255,255,255,.12) 50%, transparent 50.2%);
+      mix-blend-mode: normal;
+      animation: none;
     }
-    .node::after { color: #ffffff; }
+    .node::after { display: none; }
+    .node-wrap:nth-child(2) .node { transform: perspective(520px) rotateX(-9deg) rotateY(-9deg) rotateZ(2deg); }
+    .node-wrap:nth-child(3) .node { transform: perspective(520px) rotateX(7deg) rotateY(11deg) rotateZ(1deg); }
+    .node-wrap:nth-child(4) .node { transform: perspective(520px) rotateX(8deg) rotateY(-10deg) rotateZ(-2deg); }
     .node:hover, .node:focus-visible {
       border-color: #000000;
       box-shadow:
-        inset -24px -28px 44px rgba(0,0,0,.92),
-        inset 11px 9px 25px rgba(255,255,255,.08),
+        inset -18px -20px 34px rgba(0,0,0,.88),
+        inset 13px 11px 22px rgba(255,255,255,.08),
         0 0 0 3px #ffffff,
         0 0 0 5px #000000,
         0 20px 44px rgba(0,0,0,.25);
@@ -516,12 +527,6 @@
 
     <div class="brand-mark" aria-label="Blue Wave Studio">bluewavestudio</div>
 
-    <header class="intro">
-      <p class="role">San Francisco Bay Area</p>
-      <h1>Meet Brandon Kim, in orbit.</h1>
-      <p class="instruction">Four worlds, one evolving identity. Drag to orbit the model, zoom to explore, then choose a world to enter.</p>
-    </header>
-
     <ul class="nodes" id="identity-nodes" aria-label="Explore Brandon's identity">
       <li class="node-wrap" data-orbit="0"><button class="node" type="button" data-panel="service" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">01 / 04</span><span class="node-title">Service</span></span></button></li>
       <li class="node-wrap" data-orbit="1"><button class="node" type="button" data-panel="strategy" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">02 / 04</span><span class="node-title">Strategy</span></span></button></li>
@@ -529,10 +534,6 @@
       <li class="node-wrap" data-orbit="3"><button class="node" type="button" data-panel="frame" aria-haspopup="dialog"><span class="node-copy"><span class="node-index">04 / 04</span><span class="node-title">Behind<br />the lens</span></span></button></li>
     </ul>
 
-    <div class="camera-ui" aria-label="Camera controls">
-      <button class="reset-camera" id="reset-camera" type="button">Reset view</button>
-      <span class="camera-hint">Drag to orbit · scroll or pinch to zoom</span>
-    </div>
     <a class="contact-link" href="mailto:brandon@bluewave9thst.com">brandon@bluewave9thst.com ↗</a>
   </main>
 
@@ -609,12 +610,13 @@
       { radius: 300, phase: Math.PI * 1.5, speed: .000072 }
     ];
     const orbitRadii = [118, 178, 238, 300];
-    const pullStrings = Array.from({ length: 24 }, (_, index) => ({
-      angle: index / 24 * Math.PI * 2 + (random() - .5) * .12,
-      radius: 92 + random() * 300,
-      phase: random(),
-      speed: .000035 + random() * .00002,
-      length: 18 + random() * 38
+    const clusterNodes = Array.from({ length: 50 }, (_, index) => ({
+      angle: index / 50 * Math.PI * 2 + (random() - .5) * .16,
+      radius: 390 + random() * 155,
+      lift: (random() - .5) * 170,
+      phase: random() * Math.PI * 2,
+      speed: .00028 + random() * .00018,
+      size: 1.8 + random() * 2.6
     }));
 
     function resize() {
@@ -643,8 +645,8 @@
       const focal = Math.min(width, height) * 1.08;
       const depth = Math.max(180, camera.distance - p.z);
       const scale = focal / depth;
-      const centerX = width < 760 ? width * .5 : width * .62;
-      const centerY = width < 760 ? height * .68 : height * .56;
+      const centerX = width * .5;
+      const centerY = height * .5;
       return { x: centerX + p.x * scale, y: centerY + p.y * scale, scale, z: p.z };
     }
 
@@ -690,49 +692,43 @@
       /* Clear orbital architecture: four concentric paths, one shared movement. */
       orbitRadii.forEach((radius) => drawOrbitPath({ radius }, orbitScale));
 
-      /* Subtle gravitational strings. Each bead moves inward along a straight spoke. */
-      for (const string of pullStrings) {
-        const outerRadius = string.radius * orbitScale;
-        const outer = project({
-          x: Math.cos(string.angle) * outerRadius,
-          y: 0,
-          z: Math.sin(string.angle) * outerRadius
-        });
-        const inner = project({
-          x: Math.cos(string.angle) * 44 * orbitScale,
-          y: 0,
-          z: Math.sin(string.angle) * 44 * orbitScale
-        });
-        ctx.beginPath();
-        ctx.moveTo(inner.x, inner.y);
-        ctx.lineTo(outer.x, outer.y);
-        ctx.strokeStyle = 'rgba(0,0,0,.09)';
-        ctx.lineWidth = .7;
-        ctx.stroke();
+      /* Fifty linked circles form a gently hovering constellation outside the orbital system. */
+      const constellation = clusterNodes.map((node) => {
+        const drift = scenePaused ? node.phase : node.phase + now * node.speed;
+        const radius = (node.radius + Math.sin(drift) * 10) * orbitScale;
+        const angle = node.angle + Math.sin(drift * .73) * .026;
+        return {
+          ...project({
+            x: Math.cos(angle) * radius,
+            y: (node.lift + Math.sin(drift * 1.31) * 10) * orbitScale,
+            z: Math.sin(angle) * radius
+          }),
+          size: node.size
+        };
+      });
 
-        const progress = scenePaused ? string.phase : (string.phase + now * string.speed) % 1;
-        const eased = 1 - progress;
-        const beadRadius = 44 + (string.radius - 44) * eased;
-        const tailRadius = Math.min(string.radius, beadRadius + string.length);
-        const bead = project({
-          x: Math.cos(string.angle) * beadRadius * orbitScale,
-          y: 0,
-          z: Math.sin(string.angle) * beadRadius * orbitScale
-        });
-        const tail = project({
-          x: Math.cos(string.angle) * tailRadius * orbitScale,
-          y: 0,
-          z: Math.sin(string.angle) * tailRadius * orbitScale
-        });
+      ctx.lineWidth = .72;
+      ctx.strokeStyle = 'rgba(0,0,0,.18)';
+      constellation.forEach((point, index) => {
+        const next = constellation[(index + 1) % constellation.length];
         ctx.beginPath();
-        ctx.moveTo(tail.x, tail.y);
-        ctx.lineTo(bead.x, bead.y);
-        ctx.strokeStyle = 'rgba(0,0,0,.48)';
-        ctx.lineWidth = .9;
+        ctx.moveTo(point.x, point.y);
+        ctx.lineTo(next.x, next.y);
         ctx.stroke();
-        ctx.fillStyle = 'rgba(0,0,0,.78)';
-        ctx.fillRect(bead.x - 1.25, bead.y - 1.25, 2.5, 2.5);
-      }
+        if (index % 5 === 0) {
+          const crossLink = constellation[(index + 6) % constellation.length];
+          ctx.beginPath();
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(crossLink.x, crossLink.y);
+          ctx.stroke();
+        }
+      });
+      constellation.forEach((point) => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0,0,0,.74)';
+        ctx.fill();
+      });
 
       /* A restrained black center replaces the former star cluster. */
       ctx.save();
@@ -785,8 +781,6 @@
       camera.pitch = homeCamera.pitch;
       camera.distance = width < 760 ? 900 : homeCamera.distance;
     }
-    document.getElementById('reset-camera').addEventListener('click', resetCamera);
-
     world.addEventListener('wheel', (event) => {
       if (event.target.closest('button, a, .drawer')) return;
       event.preventDefault();
