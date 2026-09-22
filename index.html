@@ -262,6 +262,25 @@
       padding-bottom: 3px;
     }
     .contact-link:hover, .contact-link:focus-visible { color: var(--focus); outline: none; }
+    .audio-label {
+      position: absolute;
+      z-index: 5;
+      right: clamp(22px, 4.5vw, 74px);
+      bottom: max(14px, env(safe-area-inset-bottom));
+      padding: 3px 0;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      background: transparent;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .audio-label:hover,
+    .audio-label:focus-visible { border-bottom-color: currentColor; outline: none; }
+    .contact-link { bottom: max(38px, calc(env(safe-area-inset-bottom) + 24px)); }
 
     .veil {
       position: fixed;
@@ -347,8 +366,9 @@
       .node-title { font-size: clamp(19px, 6.3vw, 27px); }
       .camera-ui { left: 18px; bottom: max(20px, env(safe-area-inset-bottom)); gap: 9px; }
       .camera-hint { max-width: 112px; line-height: 1.35; }
-      .contact-link { right: 18px; bottom: max(26px, env(safe-area-inset-bottom)); font-size: 0; }
+      .contact-link { right: 18px; bottom: max(42px, calc(env(safe-area-inset-bottom) + 24px)); font-size: 0; }
       .contact-link::after { content: "Contact ↗"; font-size: 12px; }
+      .audio-label { right: 18px; bottom: max(16px, env(safe-area-inset-bottom)); }
       .drawer { width: 100%; }
       .chapter-panel h2 { margin-top: 54px; }
     }
@@ -816,6 +836,8 @@
     </ul>
 
     <a class="contact-link" href="mailto:brandon@bluewave9thst.com">brandon@bluewave9thst.com ↗</a>
+    <button class="audio-label" id="audio-toggle" type="button" aria-pressed="false">audio starten</button>
+    <audio id="site-audio" src="assets/Recovery.mp3" preload="metadata"></audio>
   </main>
 
   <div class="veil" id="veil" aria-hidden="true">
@@ -868,6 +890,26 @@
     const world = document.getElementById('world');
     const nodeWraps = [...document.querySelectorAll('.node-wrap')];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const audioToggle = document.getElementById('audio-toggle');
+    const siteAudio = document.getElementById('site-audio');
+
+    function setAudioState(isPlaying) {
+      audioToggle.textContent = isPlaying ? 'audio stoppen' : 'audio starten';
+      audioToggle.setAttribute('aria-pressed', String(isPlaying));
+    }
+    audioToggle.addEventListener('click', () => {
+      if (siteAudio.paused) {
+        siteAudio.play().then(() => setAudioState(true)).catch(() => setAudioState(false));
+      } else {
+        siteAudio.pause();
+        setAudioState(false);
+      }
+    });
+    siteAudio.addEventListener('pause', () => setAudioState(false));
+    siteAudio.addEventListener('ended', () => {
+      siteAudio.currentTime = 0;
+      setAudioState(false);
+    });
 
     const camera = { yaw: -0.08, pitch: -0.5, distance: 820 };
     const homeCamera = { ...camera };
