@@ -814,6 +814,36 @@
       .node-wrap:nth-child(4) { width: 92px; }
     }
 
+    .center-core {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 50%;
+      width: 88px;
+      height: 88px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+    .center-core:focus-visible {
+      outline: 1px solid rgba(255,255,255,.92);
+      outline-offset: 8px;
+    }
+    .center-core::after {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(255,255,255,0);
+      transition: box-shadow .2s ease;
+    }
+    .center-core:hover::after,
+    .center-core:focus-visible::after { box-shadow: 0 0 24px rgba(255,255,255,.42); }
+    .tone-story { background: #070709; color: #ffffff; }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
     }
@@ -835,6 +865,8 @@
       <li class="node-wrap" data-orbit="3"><button class="node" type="button" data-panel="frame" aria-haspopup="dialog" aria-label="Open Behind the lens"></button></li>
     </ul>
 
+    <button class="center-core" id="center-core" type="button" aria-haspopup="dialog" aria-label="Open Your Story is Not Over"></button>
+
     <a class="contact-link" href="mailto:brandon@bluewave9thst.com">brandon@bluewave9thst.com ↗</a>
     <button class="audio-label" id="audio-toggle" type="button" aria-pressed="false">audio starten</button>
     <audio id="site-audio" src="assets/Recovery.mp3" preload="metadata"></audio>
@@ -848,9 +880,9 @@
       <article class="chapter-panel" data-chapter="service">
         <p class="panel-index">Service · Brandon Kim</p>
         <h2>Care under pressure.</h2>
-        <p class="panel-lede">I oversee and help provide healthcare for roughly 600 military personnel at U.S. Coast Guard Sector San Francisco.</p>
+        <p class="panel-lede">I provide healthcare at a military base in San Francisco.</p>
         <div class="panel-body">
-          <p>My work sits at the intersection of clinical care, readiness, leadership, and the daily needs of a large military community.</p>
+          <p>My work sits at the intersection of clinical care, readiness, leadership, and the daily needs of a military community.</p>
         </div>
       </article>
 
@@ -879,6 +911,18 @@
         <p class="panel-lede">The camera trained another part of me: the instinct to read energy, anticipate a moment, and tell a story without interrupting it.</p>
         <div class="panel-body">
           <p>I’ve filmed more than 100 DJs, covered major concerts, and served as house photographer and media for 1015 Folsom—one of San Francisco’s best-known nightlife venues.</p>
+        </div>
+      </article>
+
+      <article class="chapter-panel" data-chapter="story">
+        <p class="panel-index">Personal story · Brandon Kim</p>
+        <h2>Your Story is Not Over</h2>
+        <div class="panel-body">
+          <p>I came to this country when I was 13 years old. I didn't speak English, and I had more fears than I could name.</p>
+          <p>Like a lot of immigrant kids, I grew up living inside one question: “what if?” What if I had a better school, better friends, a better environment — better opportunities, period. That question never left me. It just grew up with me.</p>
+          <p>Here's what I know now: you don't have to be the cookie-cutter ideal to belong in the Bay Area's world of AI and technology. There is no single mold, and there never was.</p>
+          <p>I provide healthcare at a military base in San Francisco, and I'll be honest — some days, surrounded by the tech conversation happening here, I feel irrelevant. But I'm done believing that. I want to take everything I know from military medicine — real, high-stakes, human medicine — and pair it with the new wave of AI to help bring life-saving medical devices to the people who need them.</p>
+          <p>Your story is not over. Mine isn't either.</p>
         </div>
       </article>
     </div>
@@ -916,7 +960,7 @@
     let width = 0, height = 0, dpr = 1;
     let lastFrame = performance.now();
     let orbitClock = 0;
-    let interactionPauseUntil = 0;
+    let interactionEnergy = 0;
     let dragging = false;
     let pointerStart = null;
     let pinchDistance = 0;
@@ -1170,11 +1214,14 @@
 
       const identityLayout = nodeWraps.map((wrap, index) => {
         const spec = orbitSpecs[index];
-        const angle = spec.phase + orbitClock * spec.speed;
+        const surge = reduceMotion ? 0 : interactionEnergy;
+        const agitation = Math.sin(now * (.013 + index * .0017) + index * 1.9) * .34 * surge;
+        const angle = spec.phase + orbitClock * spec.speed + agitation;
+        const radiusKick = 1 + Math.sin(now * (.017 + index * .0013) + index) * .18 * surge;
         const point = {
-          x: Math.cos(angle) * spec.radius * orbitScale,
-          y: 0,
-          z: Math.sin(angle) * spec.radius * orbitScale
+          x: Math.cos(angle) * spec.radius * orbitScale * radiusKick,
+          y: Math.sin(now * (.019 + index * .0011) + index * 2.2) * spec.radius * .2 * surge,
+          z: Math.sin(angle) * spec.radius * orbitScale * radiusKick
         };
         const projected = project(point);
         const size = wrap.offsetWidth || 112;
@@ -1198,9 +1245,20 @@
         drawGravityPull(layout.star, center, now, index, scenePaused);
       });
 
-      /* Every identity sphere is rendered by the exact same light routine as the center. */
+      /* Every identity sphere stays a compact light; interaction sends the outer four into a brief energetic surge. */
       drawCoreLight(center, now, scenePaused);
-      identityLayout.forEach(({ star }) => drawCoreLight(star, now, scenePaused, .9));
+      identityLayout.forEach(({ star }, index) => {
+        if (interactionEnergy > .08 && !reduceMotion) {
+          const flare = 18 + interactionEnergy * 28;
+          drawGlow(star.x, star.y, flare, 'rgba(255,255,255,ALPHA)', .12 * interactionEnergy);
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, 7 + interactionEnergy * 5 + Math.sin(now * .025 + index) * 2, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255,255,255,${.08 + interactionEnergy * .2})`;
+          ctx.lineWidth = .7;
+          ctx.stroke();
+        }
+        drawCoreLight(star, now, scenePaused, .9 + interactionEnergy * .08);
+      });
 
       identityLayout.forEach(({ wrap, projected, depthScale, x, y }) => {
         wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${depthScale})`;
@@ -1214,9 +1272,21 @@
       lastFrame = now;
       const drawerOpen = document.body.classList.contains('drawer-open');
       const orbitRest = (now % 6000) > 3600;
-      if (!reduceMotion && !drawerOpen && !dragging && now > interactionPauseUntil && !orbitRest) orbitClock += delta;
+      if (!reduceMotion && !drawerOpen) {
+        if (interactionEnergy > .002) {
+          orbitClock += delta * (1 + interactionEnergy * 54);
+          interactionEnergy *= Math.pow(.992, delta / 16.67);
+        } else if (!dragging && !orbitRest) {
+          orbitClock += delta;
+        }
+      }
       if (!drawerOpen) drawScene(now);
       requestAnimationFrame(frame);
+    }
+
+    function triggerOrbitBurst(strength = 1) {
+      if (reduceMotion) return;
+      interactionEnergy = Math.min(1, Math.max(interactionEnergy, strength));
     }
 
     function resetCamera() {
@@ -1228,17 +1298,15 @@
       if (event.target.closest('button, a, .drawer')) return;
       event.preventDefault();
       camera.distance = Math.max(520, Math.min(1250, camera.distance + event.deltaY * .55));
+      triggerOrbitBurst(.92);
     }, { passive: false });
-
-    world.addEventListener('pointermove', () => {
-      interactionPauseUntil = performance.now() + 1400;
-    }, { passive: true });
 
     world.addEventListener('pointerdown', (event) => {
       if (event.target.closest('button, a, .drawer')) return;
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
       world.setPointerCapture(event.pointerId);
       dragging = true;
+      triggerOrbitBurst(.72);
       pointerStart = { x: event.clientX, y: event.clientY, yaw: camera.yaw, pitch: camera.pitch };
       world.classList.add('dragging');
       if (pointers.size === 2) {
@@ -1249,6 +1317,7 @@
     world.addEventListener('pointermove', (event) => {
       if (!pointers.has(event.pointerId)) return;
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      triggerOrbitBurst(1);
       if (pointers.size === 2) {
         const pair = [...pointers.values()];
         const distance = Math.hypot(pair[0].x - pair[1].x, pair[0].y - pair[1].y);
@@ -1278,6 +1347,7 @@
     const closeButton = veil.querySelector('.close');
     const dismissButton = veil.querySelector('.veil-dismiss');
     const nodeButtons = [...document.querySelectorAll('.node')];
+    const centerCore = document.getElementById('center-core');
     const chapters = [...document.querySelectorAll('.chapter-panel')];
     let lastTrigger = null;
 
@@ -1307,6 +1377,7 @@
       if (lastTrigger) lastTrigger.focus();
     }
     nodeButtons.forEach((button) => button.addEventListener('click', () => openChapter(button.dataset.panel, button)));
+    centerCore.addEventListener('click', () => openChapter('story', centerCore));
     closeButton.addEventListener('click', closeChapter);
     dismissButton.addEventListener('click', closeChapter);
     document.addEventListener('keydown', (event) => {
