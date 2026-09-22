@@ -827,6 +827,73 @@
       pointer-events: none;
     }
 
+    .brand-mark {
+      appearance: none;
+      font-family: inherit;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .brand-mark:hover,
+    .brand-mark:focus-visible,
+    .brand-mark[aria-expanded="true"] {
+      border-color: rgba(255,255,255,.38);
+      color: rgba(255,255,255,.9);
+      outline: none;
+    }
+    .brand-menu {
+      position: absolute;
+      z-index: 8;
+      top: calc(max(18px, env(safe-area-inset-top)) + 38px);
+      left: clamp(18px, 3vw, 42px);
+      width: min(330px, calc(100% - 36px));
+      padding: 10px 0;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 7px;
+      background: rgba(3,3,6,.94);
+      box-shadow: 0 18px 42px rgba(0,0,0,.38);
+      backdrop-filter: blur(12px);
+    }
+    .brand-menu[hidden] { display: none; }
+    .brand-menu button,
+    .brand-menu a {
+      display: block;
+      width: 100%;
+      padding: 9px 14px;
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.76);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 15px;
+      line-height: 1.25;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .brand-menu button:hover,
+    .brand-menu button:focus-visible,
+    .brand-menu a:hover,
+    .brand-menu a:focus-visible {
+      background: rgba(255,255,255,.08);
+      color: #ffffff;
+      outline: none;
+    }
+    .brand-menu .menu-contact {
+      margin-top: 7px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.13);
+      font-family: "Archivo", sans-serif;
+      font-size: 11px;
+      letter-spacing: .01em;
+    }
+
+    @media (max-width: 760px) {
+      .brand-menu {
+        top: calc(max(14px, env(safe-area-inset-top)) + 38px);
+        left: 14px;
+        width: min(330px, calc(100% - 28px));
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
     }
@@ -839,7 +906,14 @@
     <canvas class="space-canvas" id="space" aria-hidden="true"></canvas>
     <div class="vignette" aria-hidden="true"></div>
 
-    <div class="brand-mark" aria-label="Blue Wave Studio">bluewavestudio</div>
+    <button class="brand-mark" id="brand-menu-toggle" type="button" aria-expanded="false" aria-controls="brand-menu">bluewavestudio</button>
+    <nav class="brand-menu" id="brand-menu" aria-label="Explore sections" hidden>
+      <button type="button" data-panel="service">Care under pressure.</button>
+      <button type="button" data-panel="strategy">The uncommon route.</button>
+      <button type="button" data-panel="medtech">Where AI meets medicine.</button>
+      <button type="button" data-panel="frame">Seeing the room.</button>
+      <a class="menu-contact" href="mailto:brandon@bluewave9thst.com">contact — brandon@bluewave9thst.com</a>
+    </nav>
 
     <ul class="nodes" id="identity-nodes" aria-label="Explore Brandon's identity">
       <li class="node-wrap" data-orbit="0"><button class="node" type="button" data-panel="service" aria-haspopup="dialog" aria-label="Open Service"></button></li>
@@ -850,7 +924,6 @@
 
     <div class="center-core" id="center-core" aria-hidden="true"></div>
 
-    <a class="contact-link" href="mailto:brandon@bluewave9thst.com">brandon@bluewave9thst.com ↗</a>
     <button class="audio-label" id="audio-toggle" type="button" aria-pressed="false">audio starten</button>
     <audio id="site-audio" src="assets/Recovery.mp3" preload="metadata"></audio>
   </main>
@@ -1292,7 +1365,15 @@
     const dismissButton = veil.querySelector('.veil-dismiss');
     const nodeButtons = [...document.querySelectorAll('.node')];
     const chapters = [...document.querySelectorAll('.chapter-panel')];
+    const brandMenuToggle = document.getElementById('brand-menu-toggle');
+    const brandMenu = document.getElementById('brand-menu');
+    const brandMenuButtons = [...brandMenu.querySelectorAll('button[data-panel]')];
     let lastTrigger = null;
+
+    function setBrandMenu(open) {
+      brandMenu.hidden = !open;
+      brandMenuToggle.setAttribute('aria-expanded', String(open));
+    }
 
     function openChapter(name, trigger) {
       const chapter = chapters.find((item) => item.dataset.chapter === name);
@@ -1320,10 +1401,21 @@
       if (lastTrigger) lastTrigger.focus();
     }
     nodeButtons.forEach((button) => button.addEventListener('click', () => openChapter(button.dataset.panel, button)));
+    brandMenuToggle.addEventListener('click', () => setBrandMenu(brandMenu.hidden));
+    brandMenuButtons.forEach((button) => button.addEventListener('click', () => {
+      setBrandMenu(false);
+      openChapter(button.dataset.panel, brandMenuToggle);
+    }));
+    document.addEventListener('pointerdown', (event) => {
+      if (!brandMenu.hidden && !event.target.closest('#brand-menu, #brand-menu-toggle')) setBrandMenu(false);
+    });
     closeButton.addEventListener('click', closeChapter);
     dismissButton.addEventListener('click', closeChapter);
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && veil.classList.contains('open')) closeChapter();
+      if (event.key === 'Escape' && !brandMenu.hidden) {
+        setBrandMenu(false);
+        brandMenuToggle.focus();
+      } else if (event.key === 'Escape' && veil.classList.contains('open')) closeChapter();
       if (event.key === 'Tab' && veil.classList.contains('open')) {
         const focusable = [...drawer.querySelectorAll('button, a[href]')].filter((element) => element.offsetParent !== null);
         if (!focusable.length) return;
